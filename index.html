@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cat Fact API - Multiple Ways</title>
+  <!-- Axios CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- jQuery CDN -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .result-box {
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Cat Facts from Different API Methods</h1>
+  <div id="fetch-result" class="result-box">Fetch method</div>
+  <div id="async-result" class="result-box">async method</div>
+  <div id="xhr-result" class="result-box">xhr method</div>
+  <div id="axios-result" class="result-box">axios method</div>
+  <div id="jquery-result" class="result-box">jquery ajax method</div>
+
+
+  <script>
+    const apiURL = "https://catfact.ninja/fact";
+
+    // 1. fetch with then
+    fetch(apiURL)
+      .then(res => res.json())
+      .then(data => document.getElementById("fetch-result").textContent = data.fact)
+      .catch(err => console.error("Fetch Error:", err));
+
+    // 2. async/await
+    async function fetchWithAsync() {
+      try {
+        const res = await fetch(apiURL);
+        const data = await res.json();
+        document.getElementById("async-result").textContent = data.fact;
+      } catch (err) {
+        console.error("Async/Await Error:", err);
+      }
+    }
+    fetchWithAsync();
+
+    // 3. XMLHttpRequest
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", apiURL);
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        document.getElementById("xhr-result").textContent = JSON.parse(xhr.responseText).fact;
+      } else {
+        console.error("XHR Error:", xhr.status);
+      }
+    };
+    xhr.send();
+
+    // 4. Axios
+    axios.get(apiURL)
+      .then(res => document.getElementById("axios-result").textContent = res.data.fact)
+      .catch(err => console.error("Axios Error:", err));
+
+    // 5. jQuery AJAX
+    $.ajax({
+      url: apiURL,
+      method: "GET",
+      success: function (data) {
+        document.getElementById("jquery-result").textContent = data.fact;
+      },
+      error: function (err) {
+        console.error("jQuery AJAX Error:", err);
+      }
+    });
+  </script>
+</body>
+
+</html>
